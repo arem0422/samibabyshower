@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmación de Asistencia</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Edu+TAS+Beginner&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Edu TAS Beginner', cursive;
+        }
+
+        html,
+        body {
+            height: 100vh;
+            background-color: #FFFCFB;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .columna1 {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .columna1 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .columna2 {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        form {
+            background-color: rgba(252, 212, 224, 0.2);
+            color: #C27B72;
+            border-radius: 8px;
+            text-align: left;
+            //font-weight: bolder;
+
+        }
+
+        .form-group {
+            margin: 10px 0;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #C27B72;
+            border-color: #C27B72;
+        }
+
+        .btn-primary:hover {
+            background-color: #ce928a;
+            border-color: #ce928a;
+        }
+
+        .bgimage {
+            background-image: url("https:////static.vgroup.cl/lms5/archivo/samybbshower_9832_23-11-08-16-06-07-dOwR5.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        .fullsc {
+            height: 100vh;
+        }
+
+        .imgtable {
+            width: 100%;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid m-0 p-0">
+        <div class="row p-0 fullsc">
+            <div class="col-lg-6 bgimage">
+
+            </div>
+            <div class="col-lg-6 my-auto p-5">
+                <form action="#" method="POST" class="p-5 rounded">
+                    <h1 class="text-center fw-b">Confirma tu asistencia</h2>
+                        <div class="form-group">
+                            <label for="nombre">Nombre:</label>
+                            <input type="text" id="nombre" name="nombre" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apellido">Apellido:</label>
+                            <input type="text" id="apellido" name="apellido" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cantidad">Cantidad de Personas Adicionales:</label>
+                            <input type="number" id="cantidad" name="cantidad" class="form-control" min="0" max="5"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="regalos">Regalo Sugerido: (opcional)</label>
+                            <select id="regalos" name="regalo" class="form-control">
+                                <option value="">Seleccione un regalos</option>
+                                <option value="Pañalera tipo mochila">Pañalera tipo mochila</option>
+                                <option value="Monitor de bebé con cámara">Monitor de bebé con cámara</option>
+                                <option value="Máquina de sonido para bebé, luz nocturna">Máquina de sonido para bebé, luz nocturna</option>
+                                <!-- Agrega más opciones si es necesario -->
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Confirmar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Agrega esta sección al cuerpo de tu HTML -->
+    <div class="modal" id="resultadosModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Acá dejaremos un listado de productos relacionados a el regalo seleccionado</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="resultadosBusqueda">
+                        <!-- Aquí se mostrarán los resultados de la búsqueda -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Función para buscar tiendas en Google
+            function buscarTiendas(regaloSeleccionado) {
+                // Hacer una solicitud a la API de Google con el término de búsqueda
+                $.ajax({
+                    url: 'https://www.googleapis.com/customsearch/v1',
+                    data: {
+                        q: regaloSeleccionado + ' tienda',
+                        key: 'AIzaSyCbUHnzfpQfYOw5ZmsCK_TxNbzGL8UtlKs', // Reemplaza 'TU_API_KEY' con tu API Key de Google Custom Search
+                        cx: 'b7dc3db7d0cec4086' // Reemplaza 'TU_SEARCH_ENGINE_ID' con tu Search Engine ID de Google Custom Search
+                    },
+                    success: function (response) {
+                        // Manejar la respuesta de la búsqueda
+                        console.log('Resultados de la búsqueda:', response);
+                        // Aquí puedes mostrar los resultados en tu página web
+
+                        // Mostrar los resultados en la modal
+                        mostrarResultados(response.items);
+                    },
+                    error: function (error) {
+                        console.error('Error al buscar tiendas:', error);
+                    }
+                });
+            }
+
+
+            // Función para mostrar los resultados en la modal
+            function mostrarResultados(resultados) {
+                var contenido = '<table class="table">';
+                contenido += '<thead><tr><th>Imagen</th><th>Enlace</th><th>Tienda</th></tr></thead>';
+                contenido += '<tbody>';
+
+                // Construir la tabla de resultados
+                resultados.forEach(function (resultado) {
+                    contenido += '<tr>';
+                    // Columna 1: Imagen
+                    if (resultado.pagemap && resultado.pagemap.cse_thumbnail && resultado.pagemap.cse_thumbnail[0] && resultado.pagemap.cse_thumbnail[0].src) {
+                        contenido += '<td><img src="' + resultado.pagemap.cse_thumbnail[0].src + '" width="200" height="200"></td>';
+                    } else {
+                        contenido += '<td>Imagen no disponible</td>';
+                    }
+                    // Columna 2: Enlace al producto
+                    contenido += '<td><a href="' + resultado.link + '" target="_blank">' + resultado.title + '</a></td>';
+                    // Columna 3: Precio referencial
+                    // Columna 4: Nombre de la tienda
+                    contenido += '<td>' + obtenerNombreTienda(resultado.link) + '</td>'; // Asume que existe una función para obtener el nombre de la tienda
+
+                    contenido += '</tr>';
+                });
+
+                contenido += '</tbody></table>';
+
+                // Mostrar en la modal
+                $('#resultadosBusqueda').html(contenido);
+                $('#resultadosModal').modal('show');
+            }
+
+            // Función para obtener el nombre de la tienda a partir del enlace
+            function obtenerNombreTienda(enlace) {
+                // Aquí puedes agregar lógica para extraer el nombre de la tienda del enlace
+                // Esto es un ejemplo básico, deberías ajustarlo según la estructura de tus enlaces
+                // Por ejemplo, si el enlace es https://www.ejemplo.com/tienda/producto123
+                // Podrías extraer el nombre de la tienda como "ejemplo.com" en este caso
+
+                // Ejemplo de lógica básica:
+                const url = new URL(enlace);
+                return url.hostname; // Devuelve el nombre del host del enlace
+            }
+
+
+            // Evento al cambiar la selección del regalo en el formulario
+            $('#regalos').change(function () {
+                var regaloSeleccionado = $(this).val();
+                if (regaloSeleccionado != "") {
+                    buscarTiendas(regaloSeleccionado);
+                }
+
+            });
+        });
+    </script>
+</body>
+
+</html>
